@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ReportedIncidentsPage extends StatelessWidget {
+class AmbulanceViewResponse extends StatelessWidget {
   final List<Incident> incidents = [
     Incident(
       title: "Fire Outbreak",
@@ -9,6 +9,7 @@ class ReportedIncidentsPage extends StatelessWidget {
       incidentDate: DateTime(2024, 1, 15),
       latitude: 37.7749,
       longitude: -122.4194,
+      response: "Firefighters are on the scene.",
     ),
     Incident(
       title: "Road Accident",
@@ -16,6 +17,7 @@ class ReportedIncidentsPage extends StatelessWidget {
       incidentDate: DateTime(2024, 1, 10),
       latitude: 34.0522,
       longitude: -118.2437,
+      response: null, // No response yet
     ),
     Incident(
       title: "Flooding",
@@ -23,19 +25,20 @@ class ReportedIncidentsPage extends StatelessWidget {
       incidentDate: DateTime(2024, 1, 5),
       latitude: 40.7128,
       longitude: -74.0060,
+      response: "Emergency services are evacuating residents.",
     ),
   ];
 
-  ReportedIncidentsPage({Key? key}) : super(key: key);
+  AmbulanceViewResponse({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('Reported Incidents'),
-      //   centerTitle: true,
-      //   elevation: 0,
-      // ),
+      appBar: AppBar(
+        title: const Text('Reported Incidents'),
+        centerTitle: true,
+        elevation: 0,
+      ),
       body: SafeArea(
         child: ListView.builder(
           padding: const EdgeInsets.all(16.0),
@@ -100,6 +103,17 @@ class IncidentCard extends StatelessWidget {
             ),
             const SizedBox(height: 12),
 
+            // Police Response
+            Text(
+              incident.response ?? "Not responded yet",
+              style: TextStyle(
+                fontSize: 16,
+                color: incident.response == null ? Colors.red : Colors.green,
+                fontStyle: incident.response == null ? FontStyle.italic : FontStyle.normal,
+              ),
+            ),
+            const SizedBox(height: 12),
+
             // Navigation Button
             Align(
               alignment: Alignment.centerRight,
@@ -140,6 +154,7 @@ class Incident {
   final DateTime incidentDate;
   final double latitude;
   final double longitude;
+  final String? response;
 
   Incident({
     required this.title,
@@ -147,5 +162,6 @@ class Incident {
     required this.incidentDate,
     required this.latitude,
     required this.longitude,
+    this.response,
   });
 }

@@ -1,11 +1,13 @@
+import 'package:disastermanagement/authentication/screens/registration.dart';
 import 'package:disastermanagement/models/regModel.dart';
+import 'package:disastermanagement/models/userType.dart';
 import 'package:disastermanagement/volunteer/screens/home.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
-  final RegistrationModel regModel;
+  // final RegistrationModel regModel;
 
-  const LoginScreen({super.key, required this.regModel});
+  const LoginScreen({super.key,});
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -111,20 +113,20 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 15),
               // Forgot Password
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {
-                    // Handle forgot password navigation
-                  },
-                  child: const Text(
-                    'Forgot Password?',
-                    style: TextStyle(
-                      color: Color(0xFF1D1F2A),
-                    ),
-                  ),
-                ),
-              ),
+              // Align(
+              //   alignment: Alignment.centerRight,
+              //   child: TextButton(
+              //     onPressed: () {
+              //       // Handle forgot password navigation
+              //     },
+              //     child: const Text(
+              //       'Forgot Password?',
+              //       style: TextStyle(
+              //         color: Color(0xFF1D1F2A),
+              //       ),
+              //     ),
+              //   ),
+              // ),
               const SizedBox(height: 20),
               // Login Button
               ElevatedButton(
@@ -133,15 +135,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => VolunteerHomePage(),
-                      ),
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Login successful')),
-                    );
+                   login(context, emailController.text, passwordController.text);
+                    // ScaffoldMessenger.of(context).showSnackBar(
+                    //   const SnackBar(content: Text('Login successful')),
+                    // );
                   }
                 },
                 child: Text(
@@ -159,7 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const Text("Don't have an account?"),
                   TextButton(
                     onPressed: () {
-                      // Navigate to registration screen
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => VolunteerRegistrationScreen(),));
                     },
                     child: const Text(
                       'Register',

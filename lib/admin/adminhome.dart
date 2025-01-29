@@ -5,6 +5,7 @@ import 'package:disastermanagement/admin/resourcemanagement.dart';
 import 'package:disastermanagement/admin/viewfeedbacks.dart';
 import 'package:disastermanagement/admin/viewreportedincidents.dart';
 import 'package:disastermanagement/admin/viewvolunteers.dart';
+import 'package:disastermanagement/authentication/screens/login.dart';
 import 'package:disastermanagement/volunteer/screens/tasks.dart';
 import 'package:flutter/material.dart';
 
@@ -110,7 +111,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
               icon: Icons.logout,
               text: 'Logout',
               onTap: () {
-                Navigator.pop(context);
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen(),));
               },
             ),
           ],

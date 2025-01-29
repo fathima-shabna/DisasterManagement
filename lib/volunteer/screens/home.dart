@@ -1,11 +1,16 @@
+import 'package:disastermanagement/admin/emergencyalert.dart';
+import 'package:disastermanagement/admin/viewreportedincidents.dart';
 import 'package:disastermanagement/authentication/screens/login.dart';
 import 'package:disastermanagement/models/regModel.dart';
+import 'package:disastermanagement/models/userType.dart';
+import 'package:disastermanagement/volunteer/screens/ambulanceviewresponse.dart';
 import 'package:disastermanagement/volunteer/screens/feedback.dart';
 import 'package:disastermanagement/volunteer/screens/profile.dart';
 import 'package:disastermanagement/volunteer/screens/report.dart';
 import 'package:disastermanagement/volunteer/screens/resources.dart';
 import 'package:disastermanagement/volunteer/screens/tasks.dart';
 import 'package:disastermanagement/volunteer/screens/viewalert.dart';
+import 'package:disastermanagement/volunteer/screens/viewallalerts.dart';
 import 'package:flutter/material.dart';
 
 class VolunteerHomePage extends StatefulWidget {
@@ -31,7 +36,8 @@ class _VolunteerHomePageState extends State<VolunteerHomePage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.pop(context);
+                // Close the dialog
               },
               child: Text('Cancel',style: TextStyle(color: const Color(0xFF1D1F2A))),
             ),
@@ -40,8 +46,9 @@ class _VolunteerHomePageState extends State<VolunteerHomePage> {
                 backgroundColor: const Color(0xFF1D1F2A),
               ),
               onPressed: () {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen(),)); 
                 // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginScreen(regModel: RegistrationModel(fullName: '', email: '', phone: '', address: '', password: '', selectedSkills: [], registrationType: ''),),), (Route<dynamic> route) => false,);
-                Navigator.pop(context);
+                
                 print('Logged out successfully'); 
               },
               child: Text('Logout',style: TextStyle(color: Colors.white),),
@@ -123,7 +130,7 @@ class _VolunteerHomePageState extends State<VolunteerHomePage> {
               ),
               const SizedBox(height: 20),
         
-              // Tasks Card
+              if(userType == 'volunteer' || userType == 'ambulance')...[
               GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -152,9 +159,9 @@ class _VolunteerHomePageState extends State<VolunteerHomePage> {
                   ),
                 ),
               ),
-        
+              ],
               const SizedBox(height: 20),
-              if(registrationType == 'volunteer'|| registrationType == 'ambulance') ...[
+
                 GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -183,8 +190,70 @@ class _VolunteerHomePageState extends State<VolunteerHomePage> {
                   ),
                 ),
               ),
-              ],
               const SizedBox(height: 20),
+              if(userType == 'volunteer')...[
+                GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AmbulanceViewResponse(),
+                    ),
+                  );
+                },
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  elevation: 5,
+                  child: ListTile(
+                    leading: const Icon(Icons.report_gmailerrorred, color:  Color(0xFF1D1F2A), ),
+                    title: const Text(
+                      "Incidents Reported",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    subtitle: const Text("Incidents reported by you"),
+                    trailing: const Icon(Icons.arrow_forward_ios),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              ],
+              if(userType == 'ambulance' || userType == 'user')...[
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ReportedIncidentsPage(),
+                    ),
+                  );
+                },
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  elevation: 5,
+                  child: ListTile(
+                    leading: const Icon(Icons.report_gmailerrorred, color:  Color(0xFF1D1F2A), ),
+                    title: const Text(
+                      "Incidents Reported",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    subtitle: const Text("Incidents reported by you"),
+                    trailing: const Icon(Icons.arrow_forward_ios),
+                  ),
+                ),
+              ),
+              
+              const SizedBox(height: 20),
+              ],
               GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -215,6 +284,7 @@ class _VolunteerHomePageState extends State<VolunteerHomePage> {
               ),
         
               const SizedBox(height: 20),
+              if(userType == 'volunteer' || userType == 'ambulance')...[
               GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -244,31 +314,61 @@ class _VolunteerHomePageState extends State<VolunteerHomePage> {
                 ),
               ),
               SizedBox(height: 20,),
-              // Profile Card
-              Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                elevation: 5,
-                child: ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: const Color(0xFF1D1F2A),
-                    child: Text(
-                      fullName[0],
-                      style: const TextStyle(color: Colors.white),
+              ],
+              // SizedBox(height: 20,),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EmergencyAlertsPage(),
                     ),
+                  );
+                },
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
                   ),
-                  title: const Text(
-                    "View Profile",
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  elevation: 5,
+                  child: ListTile(
+                    leading: const Icon(Icons.warning_amber, color:  Colors.red, ),
+                    title: const Text(
+                      "Emergency Alerts",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    subtitle: const Text("Emergency updates"),
+                    trailing: const Icon(Icons.arrow_forward_ios),
                   ),
-                  subtitle: const Text("Manage your account details"),
-                  trailing: const Icon(Icons.arrow_forward_ios),
-                  onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage(),));
-                  },
                 ),
               ),
+              // Profile Card
+              // Card(
+              //   shape: RoundedRectangleBorder(
+              //     borderRadius: BorderRadius.circular(15.0),
+              //   ),
+              //   elevation: 5,
+              //   child: ListTile(
+              //     leading: CircleAvatar(
+              //       backgroundColor: const Color(0xFF1D1F2A),
+              //       child: Text(
+              //         fullName[0],
+              //         style: const TextStyle(color: Colors.white),
+              //       ),
+              //     ),
+              //     title: const Text(
+              //       "View Profile",
+              //       style: TextStyle(fontWeight: FontWeight.bold),
+              //     ),
+              //     subtitle: const Text("Manage your account details"),
+              //     trailing: const Icon(Icons.arrow_forward_ios),
+              //     onTap: () {
+              //       Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage(),));
+              //     },
+              //   ),
+              // ),
             ],
           ),
         ),

@@ -1,3 +1,4 @@
+import 'package:disastermanagement/authentication/screens/login.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -35,6 +36,17 @@ class ReportResponsePage extends StatelessWidget {
         title: const Text('Reported Incidents'),
         centerTitle: true,
         elevation: 0,
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LoginScreen(),
+                    ));
+              },
+              icon: Icon(Icons.logout))
+        ],
       ),
       body: SafeArea(
         child: ListView.builder(
@@ -116,13 +128,15 @@ class _IncidentCardState extends State<IncidentCard> {
                 onPressed: () => _navigateToLocation(
                     widget.incident.latitude, widget.incident.longitude),
                 icon: const Icon(Icons.location_on, color: Colors.white),
-                label: const Text('View on Map', style: TextStyle(color: Colors.white)),
+                label: const Text('View on Map',
+                    style: TextStyle(color: Colors.white)),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF1D1F2A),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 ),
               ),
             ),
@@ -136,7 +150,10 @@ class _IncidentCardState extends State<IncidentCard> {
                     _isReplying = !_isReplying;
                   });
                 },
-                child: Text(_isReplying ? 'Cancel Reply' : 'Reply',style: TextStyle(color: Colors.white),),
+                child: Text(
+                  _isReplying ? 'Cancel Reply' : 'Reply',
+                  style: TextStyle(color: Colors.white),
+                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF1D1F2A),
                   shape: RoundedRectangleBorder(
@@ -154,14 +171,13 @@ class _IncidentCardState extends State<IncidentCard> {
                   TextField(
                     controller: _replyController,
                     decoration: const InputDecoration(
-                       fillColor: const Color.fromARGB(255, 232, 226, 226),
-                    // floatingLabelStyle: TextStyle(backgroundColor: Colors.transparent,color: Colors.black54,fontSize: 20),
-                    // labelStyle: TextStyle(color: Colors.black54,fontSize: 16),
+                      fillColor: const Color.fromARGB(255, 232, 226, 226),
+                      // floatingLabelStyle: TextStyle(backgroundColor: Colors.transparent,color: Colors.black54,fontSize: 20),
+                      // labelStyle: TextStyle(color: Colors.black54,fontSize: 16),
                       hintText: 'Enter your reply...',
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none
-                      ),
-                      contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                      border: OutlineInputBorder(borderSide: BorderSide.none),
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                     ),
                     maxLines: 3,
                   ),
@@ -173,7 +189,8 @@ class _IncidentCardState extends State<IncidentCard> {
                         _isReplying = false;
                       });
                     },
-                    child: const Text('Submit Reply',style: TextStyle(color: Colors.white)),
+                    child: const Text('Submit Reply',
+                        style: TextStyle(color: Colors.white)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
                       shape: RoundedRectangleBorder(

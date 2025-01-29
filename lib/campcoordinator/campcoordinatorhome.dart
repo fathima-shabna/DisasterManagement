@@ -28,7 +28,7 @@ class CoordinatorHomeScreen extends StatelessWidget {
                 backgroundColor: const Color(0xFF1D1F2A),
               ),
               onPressed: () {
-                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginScreen(regModel: RegistrationModel(fullName: '', email: '', phone: '', address: '', password: '', selectedSkills: [], registrationType: ''),),), (Route<dynamic> route) => false,);
+                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginScreen(),), (Route<dynamic> route) => false,);
                 // print('Logged out successfully'); 
               },
               child: Text('Logout',style: TextStyle(color: Colors.white),),

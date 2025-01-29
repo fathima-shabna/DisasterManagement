@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'package:disastermanagement/admin/map.dart';
 import 'package:disastermanagement/authentication/screens/login.dart';
 import 'package:disastermanagement/models/regModel.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 
 class VolunteerRegistrationScreen extends StatefulWidget {
@@ -26,6 +28,9 @@ class _VolunteerRegistrationScreenState
   String? password;
   bool isVolunteer = false;
   bool isAmbulance = false;
+  String? location;
+
+  final TextEditingController _locationController= TextEditingController();
 
   // final List<String> _availabilityOptions = [
   //   'Weekdays',
@@ -66,6 +71,42 @@ class _VolunteerRegistrationScreenState
 }
 
   }
+
+
+  // Function to get the current location and assign latitude and longitude
+  Future<void> _getCurrentLocation() async {
+    // Check if location services are enabled
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled, handle accordingly (e.g., show a dialog)
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Location services are disabled.')),
+      );
+      return;
+    }
+
+    // Check and request permission for location access
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+      permission = await Geolocator.requestPermission();
+      if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
+        // Location permission is denied, handle accordingly (e.g., show a dialog)
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Location permission denied.')),
+        );
+        return;
+      }
+    }
+
+    // Get the current position (latitude and longitude)
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+
+    // Update the _locationController with latitude and longitude
+    setState(() {
+      _locationController.text = 'Lat: ${position.latitude}, Lon: ${position.longitude}';
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -232,6 +273,7 @@ class _VolunteerRegistrationScreenState
             });
           },
         ),
+        SizedBox(height: 5,),
               RadioListTile<String>(
           value: 'ambulance',
           groupValue: selectedOption,
@@ -244,19 +286,47 @@ class _VolunteerRegistrationScreenState
           },
         ),
         if (selectedOption == 'ambulance')
-          TextFormField(
-            decoration: const InputDecoration(
-              labelText: 'Vehicle Number',
-              border: OutlineInputBorder(),
-              prefixIcon: Icon(Icons.library_books_outlined),
-            ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your vehicle number';
-              }
-              return null;
-            },
-            onSaved: (value) => vehicleNumber = value,
+          Column(
+            children: [
+              TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Vehicle Number',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.library_books_outlined),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your vehicle number';
+                  }
+                  return null;
+                },
+                onSaved: (value) => vehicleNumber = value,
+              ),
+               SizedBox(height: 15,),
+              TextFormField(
+                readOnly: true,
+                  controller: _locationController,
+                  decoration: InputDecoration(
+                    // fillColor: const Color.fromARGB(255, 232, 226, 226),
+                    hintText: 'Select location',
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.location_on, color: Colors.black54),
+                      onPressed: _getCurrentLocation,
+                    ),
+                    border: OutlineInputBorder(
+                      // borderRadius: BorderRadius.circular(10),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a location';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) => location = value,
+                ),
+            ],
           ),
 
         const SizedBox(height: 15),
@@ -339,7 +409,7 @@ class _VolunteerRegistrationScreenState
         registrationType: selectedOption!,
         profileImage: _imageFile,
       );
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen(regModel: volunteerRegistration,),));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen(),));
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Registration successful')),
       );
@@ -354,7 +424,7 @@ class _VolunteerRegistrationScreenState
                   const Text("Already have an account?"),
                   TextButton(
                     onPressed: () {
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen(regModel: RegistrationModel(fullName: '', email: '', phone: '', address: '', password: '', selectedSkills: [], registrationType: ''),),));
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen(),));
                     },
                     child: const Text('Login',style: TextStyle(color:  Color(0xFF1D1F2A),),),
                   ),
